@@ -1,22 +1,22 @@
 # 📋 Plano do projeto: CodeLens-programa-14-10 (1) 15-10-2026, 09-58-14
 
-_Gerado em 15/10/2026, 10:16:32 — sem IA, lendo os arquivos._
+_Gerado em 15/10/2026, 10:19:36 — sem IA, lendo os arquivos._
 
 ## 📊 Visão geral
 | Item | Valor |
 |---|---|
-| Arquivos | 161 |
-| Linhas | 21.295 |
+| Arquivos | 165 |
+| Linhas | 21.725 |
 | Telas/páginas | 13 |
 | Rotas do backend | 58 |
 | Chamadas do app | 14 |
 | Tabelas do banco | 4 |
 | Variáveis de ambiente | 20 |
 
-**Linguagens:** TypeScript (React) (77), TypeScript (33), Imagem (20), JSON (4), Markdown (4), JavaScript (4), Outros (3), HTML (3), Batch (Windows) (3), Imagem SVG (3), YAML (2), Shell (2), Python (1), Ícone (1), CSS (1)
+**Linguagens:** TypeScript (React) (77), TypeScript (33), Imagem (20), JSON (6), JavaScript (5), Markdown (4), YAML (3), Outros (3), HTML (3), Batch (Windows) (3), Imagem SVG (3), Shell (2), Python (1), Ícone (1), CSS (1)
 
 ## 💡 O que fazer (em ordem)
-1. 🧹 Tirar a Replit de 10 arquivo(s) (🏗️ Preparar → Fazer tudo)
+1. 🧹 Tirar a Replit de 11 arquivo(s) (🏗️ Preparar → Fazer tudo)
 2. 🖥️ O projeto tem backend próprio: para funcionar fora da Replit ele precisa ficar ligado num servidor (Render, Railway, Vercel) ou virar funções
 3. 🔐 Criar um .env.example com: AI_INTEGRATIONS_GEMINI_API_KEY, AI_INTEGRATIONS_GEMINI_BASE_URL, BASE_URL, C, DADOS_EM, DATA_DIR, DEV, HOST, LOG_LEVEL, NODE_ENV, NO_BROWSER, PATH… (os valores você coloca no servidor, nunca no código)
 4. 🗄️ Precisa de banco de dados (4 tabela(s)) — Neon ou Supabase servem, grátis
@@ -257,6 +257,7 @@ _Só os nomes. Os valores (chaves, senhas) nunca vão no código nem no GitHub._
 - server/lib/tar.ts
 - server/routes/code-assistant.ts
 - server/routes/projects.ts
+- service-worker.js
 - src/components/ui/badge.tsx
 - src/components/ui/button.tsx
 - vite.config.ts
@@ -274,6 +275,7 @@ _Só os nomes. Os valores (chaves, senhas) nunca vão no código nem no GitHub._
 ├─ 📁 .github/
 │  └─ 📁 workflows/
 │     ├─ apk-capacitor.yml
+│     ├─ apk.yml
 │     └─ programa-exe.yml
 ├─ 📁 dist-standalone/
 │  ├─ 📁 app/
@@ -443,6 +445,7 @@ _Só os nomes. Os valores (chaves, senhas) nunca vão no código nem no GitHub._
 ├─ .gitignore
 ├─ .npmrc
 ├─ 404.html
+├─ apk.config.json
 ├─ capacitor.config.json
 ├─ favicon.ico
 ├─ index.html
@@ -450,8 +453,10 @@ _Só os nomes. Os valores (chaves, senhas) nunca vão no código nem no GitHub._
 ├─ iniciar.sh
 ├─ LEIA-ME-PROGRAMA.md
 ├─ LEIA-ME.md
+├─ manifest.json
 ├─ package.json
 ├─ PLANO.md
+├─ service-worker.js
 ├─ termux-atalho.sh
 ├─ tsconfig.json
 └─ vite.config.ts
