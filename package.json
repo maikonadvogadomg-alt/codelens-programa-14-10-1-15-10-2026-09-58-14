@@ -5,6 +5,8 @@
   "type": "module",
   "description": "CodeLens fora da Replit: editor com IA, terminal e preview, rodando no seu PC.",
   "scripts": {
+    "desktop": "electron .",
+    "exe": "npm run build && npm run build:servidor && electron-builder --win nsis portable --x64 --publish never",
     "iniciar": "node scripts/iniciar.mjs",
     "start": "tsx server/index.ts",
     "build": "vite build",
@@ -13,8 +15,7 @@
     "dev:tela": "vite",
     "checar": "tsc --noEmit -p tsconfig.json",
     "build:servidor": "esbuild server/index.ts --bundle --platform=node --format=esm --packages=external --target=node20 --outfile=dist-server/index.mjs",
-    "programa": "electron .",
-    "exe": "npm run build && npm run build:servidor && electron-builder --win nsis portable --x64 --publish never"
+    "programa": "electron ."
   },
   "dependencies": {
     "@codemirror/autocomplete": "^6.18.0",
@@ -126,7 +127,6 @@
   "build": {
     "appId": "com.maikon.codelens",
     "productName": "CodeLens",
-    "executableName": "CodeLens",
     "directories": {
       "output": "release"
     },
@@ -137,13 +137,14 @@
       "package.json",
       "!**/*.map"
     ],
-    "asar": false,
     "win": {
       "target": [
         "nsis",
         "portable"
       ]
     },
+    "executableName": "CodeLens",
+    "asar": false,
     "nsis": {
       "oneClick": true,
       "perMachine": false,

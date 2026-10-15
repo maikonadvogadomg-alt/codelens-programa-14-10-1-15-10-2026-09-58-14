@@ -1,24 +1,24 @@
-# 📋 Plano do projeto: CodeLens-programa-14-10 (1) 15-10-2026, 09-58-14
+# 📋 Plano do projeto: codelens-programa-14-10-1-15-10-2026-09-58-14
 
-_Gerado em 15/10/2026, 10:19:36 — sem IA, lendo os arquivos._
+_Gerado em 15/10/2026, 11:33:19 — sem IA, lendo os arquivos._
 
 ## 📊 Visão geral
 | Item | Valor |
 |---|---|
-| Arquivos | 165 |
-| Linhas | 21.725 |
+| Arquivos | 168 |
+| Linhas | 35.821 |
 | Telas/páginas | 13 |
 | Rotas do backend | 58 |
 | Chamadas do app | 14 |
 | Tabelas do banco | 4 |
-| Variáveis de ambiente | 20 |
+| Variáveis de ambiente | 18 |
 
-**Linguagens:** TypeScript (React) (77), TypeScript (33), Imagem (20), JSON (6), JavaScript (5), Markdown (4), YAML (3), Outros (3), HTML (3), Batch (Windows) (3), Imagem SVG (3), Shell (2), Python (1), Ícone (1), CSS (1)
+**Linguagens:** TypeScript (React) (77), TypeScript (33), Imagem (20), JSON (7), JavaScript (6), YAML (4), Markdown (4), Outros (3), HTML (3), Batch (Windows) (3), Imagem SVG (3), Shell (2), Python (1), Ícone (1), CSS (1)
 
 ## 💡 O que fazer (em ordem)
 1. 🧹 Tirar a Replit de 11 arquivo(s) (🏗️ Preparar → Fazer tudo)
 2. 🖥️ O projeto tem backend próprio: para funcionar fora da Replit ele precisa ficar ligado num servidor (Render, Railway, Vercel) ou virar funções
-3. 🔐 Criar um .env.example com: AI_INTEGRATIONS_GEMINI_API_KEY, AI_INTEGRATIONS_GEMINI_BASE_URL, BASE_URL, C, DADOS_EM, DATA_DIR, DEV, HOST, LOG_LEVEL, NODE_ENV, NO_BROWSER, PATH… (os valores você coloca no servidor, nunca no código)
+3. 🔐 Criar um .env.example com: AI_INTEGRATIONS_GEMINI_API_KEY, AI_INTEGRATIONS_GEMINI_BASE_URL, BASE_URL, C, DATA_DIR, DEV, HOST, LOG_LEVEL, NODE_ENV, NO_BROWSER, PATH, PORT… (os valores você coloca no servidor, nunca no código)
 4. 🗄️ Precisa de banco de dados (4 tabela(s)) — Neon ou Supabase servem, grátis
 5. 📝 Criar um README.md explicando como rodar
 
@@ -37,6 +37,8 @@ _Gerado em 15/10/2026, 10:19:36 — sem IA, lendo os arquivos._
 ## ⌨️ Comandos (package.json)
 | Pasta | Comando | O que roda |
 |---|---|---|
+| . | `npm run desktop` | `electron .` |
+| . | `npm run exe` | `npm run build && npm run build:servidor && electron-builder --win nsis portable --x64 --pu` |
 | . | `npm run iniciar` | `node scripts/iniciar.mjs` |
 | . | `npm run start` | `tsx server/index.ts` |
 | . | `npm run build` | `vite build` |
@@ -46,7 +48,6 @@ _Gerado em 15/10/2026, 10:19:36 — sem IA, lendo os arquivos._
 | . | `npm run checar` | `tsc --noEmit -p tsconfig.json` |
 | . | `npm run build:servidor` | `esbuild server/index.ts --bundle --platform=node --format=esm --packages=external --target` |
 | . | `npm run programa` | `electron .` |
-| . | `npm run exe` | `npm run build && npm run build:servidor && electron-builder --win nsis portable --x64 --pu` |
 
 ## 📱 Telas e páginas
 | Endereço | Arquivo |
@@ -202,7 +203,6 @@ _Gerado em 15/10/2026, 10:19:36 — sem IA, lendo os arquivos._
 - `AI_INTEGRATIONS_GEMINI_BASE_URL`
 - `BASE_URL`
 - `C`
-- `DADOS_EM`
 - `DATA_DIR`
 - `DEV`
 - `HOST`
@@ -214,7 +214,6 @@ _Gerado em 15/10/2026, 10:19:36 — sem IA, lendo os arquivos._
 - `PREFIX`
 - `PROD`
 - `STORAGE_PATH`
-- `TESTE_SAIR`
 - `TTS_TOM`
 - `TTS_VELOCIDADE`
 - `TTS_VOZ`
@@ -266,7 +265,7 @@ _Só os nomes. Os valores (chaves, senhas) nunca vão no código nem no GitHub._
 1. Importar o projeto no Mini SK e tocar em 🏗️ Preparar → ✅ Fazer tudo (tira a Replit, cria os arquivos que faltam).
 2. Backend: escolher onde ele vai ficar ligado (Render/Railway grátis) — ou pedir à IA para transformar as rotas em funções do Netlify/Vercel, usando a tabela "O que falta no backend".
 3. Banco: criar no Neon ou Supabase e colocar o endereço na variável de ambiente do servidor.
-4. Variáveis: cadastrar 20 variável(is) no servidor (lista acima).
+4. Variáveis: cadastrar 18 variável(is) no servidor (lista acima).
 5. Testar a prévia; se der erro, 🤖 Mandar os erros para a IA.
 6. App: 📲 Instalável (PWA), 📦 APK ou 🖥️ Desktop (.exe) pelo 🏗️ Preparar.
 
@@ -276,6 +275,7 @@ _Só os nomes. Os valores (chaves, senhas) nunca vão no código nem no GitHub._
 │  └─ 📁 workflows/
 │     ├─ apk-capacitor.yml
 │     ├─ apk.yml
+│     ├─ desktop-exe.yml
 │     └─ programa-exe.yml
 ├─ 📁 dist-standalone/
 │  ├─ 📁 app/
@@ -286,7 +286,8 @@ _Só os nomes. Os valores (chaves, senhas) nunca vão no código nem no GitHub._
 │  ├─ SQL.txt
 │  └─ vite.config.apk.ts
 ├─ 📁 electron/
-│  └─ main.cjs
+│  ├─ main.cjs
+│  └─ preload.cjs
 ├─ 📁 icons/
 │  ├─ apple-touch-icon.png
 │  ├─ icon-128.png
@@ -454,6 +455,7 @@ _Só os nomes. Os valores (chaves, senhas) nunca vão no código nem no GitHub._
 ├─ LEIA-ME-PROGRAMA.md
 ├─ LEIA-ME.md
 ├─ manifest.json
+├─ package-lock.json
 ├─ package.json
 ├─ PLANO.md
 ├─ service-worker.js

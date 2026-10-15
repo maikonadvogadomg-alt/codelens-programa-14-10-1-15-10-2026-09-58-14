@@ -6,3 +6,4 @@ dados/
 *.log
 release/
 dist-server/
+dist-electron/
