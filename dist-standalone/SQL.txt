@@ -1,0 +1,162 @@
+CREATE SCHEMA "public";
+CREATE SCHEMA "drizzle";
+CREATE TABLE "ai_history" (
+	"id" varchar PRIMARY KEY DEFAULT gen_random_uuid(),
+	"action" text NOT NULL,
+	"input_preview" text DEFAULT '' NOT NULL,
+	"result" text NOT NULL,
+	"model" text DEFAULT '',
+	"provider" text DEFAULT '',
+	"input_tokens" integer DEFAULT 0,
+	"output_tokens" integer DEFAULT 0,
+	"estimated_cost" real DEFAULT 0,
+	"chat_history" jsonb,
+	"created_at" timestamp DEFAULT now() NOT NULL
+);
+CREATE TABLE "app_settings" (
+	"key" text PRIMARY KEY,
+	"value" text NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL
+);
+CREATE TABLE "custom_actions" (
+	"id" varchar PRIMARY KEY DEFAULT gen_random_uuid(),
+	"label" text NOT NULL,
+	"description" text DEFAULT '' NOT NULL,
+	"prompt" text NOT NULL
+);
+CREATE TABLE "djen_clientes" (
+	"id" varchar PRIMARY KEY DEFAULT gen_random_uuid(),
+	"nome_completo" text NOT NULL,
+	"email" text DEFAULT '' NOT NULL,
+	"tratamento" text DEFAULT '' NOT NULL,
+	"nome_caso" text DEFAULT '' NOT NULL,
+	"numero_processo" text NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL
+);
+CREATE TABLE "djen_execucoes" (
+	"id" varchar PRIMARY KEY DEFAULT gen_random_uuid(),
+	"status" text DEFAULT 'executando' NOT NULL,
+	"total_publicacoes" text DEFAULT '0' NOT NULL,
+	"processadas" text DEFAULT '0' NOT NULL,
+	"com_erro" text DEFAULT '0' NOT NULL,
+	"ignoradas" text DEFAULT '0' NOT NULL,
+	"log" text DEFAULT '' NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL
+);
+CREATE TABLE "djen_publicacoes" (
+	"id" varchar PRIMARY KEY DEFAULT gen_random_uuid(),
+	"execucao_id" text DEFAULT '' NOT NULL,
+	"numero_processo" text NOT NULL,
+	"texto" text DEFAULT '' NOT NULL,
+	"inicio_sessao" text DEFAULT '' NOT NULL,
+	"fim_sessao" text DEFAULT '' NOT NULL,
+	"prazo_oral" text DEFAULT '' NOT NULL,
+	"link_documento" text DEFAULT '' NOT NULL,
+	"cliente_id" text DEFAULT '' NOT NULL,
+	"cliente_nome" text DEFAULT '' NOT NULL,
+	"email_status" text DEFAULT 'nao_enviado' NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL
+);
+CREATE TABLE "doc_templates" (
+	"id" varchar PRIMARY KEY DEFAULT gen_random_uuid(),
+	"titulo" text NOT NULL,
+	"categoria" text DEFAULT 'Geral' NOT NULL,
+	"conteudo" text NOT NULL,
+	"docx_base64" text,
+	"docx_filename" text
+);
+CREATE TABLE "ementas" (
+	"id" varchar PRIMARY KEY DEFAULT gen_random_uuid(),
+	"titulo" text NOT NULL,
+	"categoria" text DEFAULT 'Geral' NOT NULL,
+	"texto" text NOT NULL
+);
+CREATE TABLE "processos_monitorados" (
+	"id" varchar PRIMARY KEY DEFAULT gen_random_uuid(),
+	"numero" text NOT NULL,
+	"tribunal" text NOT NULL,
+	"apelido" text DEFAULT '' NOT NULL,
+	"classe" text DEFAULT '' NOT NULL,
+	"orgao_julgador" text DEFAULT '' NOT NULL,
+	"data_ajuizamento" text DEFAULT '' NOT NULL,
+	"ultima_movimentacao" text DEFAULT '' NOT NULL,
+	"ultima_movimentacao_data" text DEFAULT '' NOT NULL,
+	"assuntos" text DEFAULT '' NOT NULL,
+	"status" text DEFAULT 'ativo' NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL
+);
+CREATE TABLE "prompt_templates" (
+	"id" varchar PRIMARY KEY DEFAULT gen_random_uuid(),
+	"titulo" text NOT NULL,
+	"categoria" text DEFAULT 'Geral' NOT NULL,
+	"texto" text NOT NULL
+);
+CREATE TABLE "session" (
+	"sid" varchar PRIMARY KEY,
+	"sess" json NOT NULL,
+	"expire" timestamp NOT NULL
+);
+CREATE TABLE "shared_pareceres" (
+	"id" varchar PRIMARY KEY,
+	"html" text NOT NULL,
+	"processo" text DEFAULT '' NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL
+);
+CREATE TABLE "snippets" (
+	"id" varchar PRIMARY KEY DEFAULT gen_random_uuid(),
+	"title" text DEFAULT 'Untitled' NOT NULL,
+	"html" text DEFAULT '' NOT NULL,
+	"css" text DEFAULT '' NOT NULL,
+	"js" text DEFAULT '' NOT NULL,
+	"mode" text DEFAULT 'html' NOT NULL
+);
+CREATE TABLE "tramitacao_publicacoes" (
+	"id" varchar PRIMARY KEY DEFAULT gen_random_uuid(),
+	"ext_id" text NOT NULL CONSTRAINT "tramitacao_publicacoes_ext_id_unique" UNIQUE,
+	"idempotency_key" text,
+	"numero_processo" text DEFAULT '' NOT NULL,
+	"numero_processo_mascara" text DEFAULT '' NOT NULL,
+	"tribunal" text DEFAULT '' NOT NULL,
+	"orgao" text DEFAULT '' NOT NULL,
+	"classe" text DEFAULT '' NOT NULL,
+	"texto" text DEFAULT '' NOT NULL,
+	"disponibilizacao_date" text DEFAULT '' NOT NULL,
+	"publicacao_date" text DEFAULT '' NOT NULL,
+	"inicio_prazo_date" text DEFAULT '' NOT NULL,
+	"link_tramitacao" text DEFAULT '' NOT NULL,
+	"link_tribunal" text DEFAULT '' NOT NULL,
+	"destinatarios" text DEFAULT '[]' NOT NULL,
+	"advogados" text DEFAULT '[]' NOT NULL,
+	"lida" text DEFAULT 'nao' NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL
+);
+CREATE TABLE "users" (
+	"id" varchar PRIMARY KEY DEFAULT gen_random_uuid(),
+	"username" text NOT NULL CONSTRAINT "users_username_unique" UNIQUE,
+	"password" text NOT NULL
+);
+CREATE TABLE "drizzle"."__drizzle_migrations" (
+	"id" serial PRIMARY KEY,
+	"hash" text NOT NULL,
+	"created_at" bigint
+);
+CREATE UNIQUE INDEX "ai_history_pkey" ON "ai_history" ("id");
+CREATE UNIQUE INDEX "app_settings_pkey" ON "app_settings" ("key");
+CREATE UNIQUE INDEX "custom_actions_pkey" ON "custom_actions" ("id");
+CREATE UNIQUE INDEX "djen_clientes_pkey" ON "djen_clientes" ("id");
+CREATE UNIQUE INDEX "djen_execucoes_pkey" ON "djen_execucoes" ("id");
+CREATE UNIQUE INDEX "djen_publicacoes_pkey" ON "djen_publicacoes" ("id");
+CREATE UNIQUE INDEX "doc_templates_pkey" ON "doc_templates" ("id");
+CREATE UNIQUE INDEX "ementas_pkey" ON "ementas" ("id");
+CREATE UNIQUE INDEX "processos_monitorados_pkey" ON "processos_monitorados" ("id");
+CREATE UNIQUE INDEX "prompt_templates_pkey" ON "prompt_templates" ("id");
+CREATE INDEX "IDX_session_expire" ON "session" ("expire");
+CREATE UNIQUE INDEX "session_pkey" ON "session" ("sid");
+CREATE UNIQUE INDEX "shared_pareceres_pkey" ON "shared_pareceres" ("id");
+CREATE UNIQUE INDEX "snippets_pkey" ON "snippets" ("id");
+CREATE UNIQUE INDEX "tramitacao_publicacoes_ext_id_unique" ON "tramitacao_publicacoes" ("ext_id");
+CREATE UNIQUE INDEX "tramitacao_publicacoes_pkey" ON "tramitacao_publicacoes" ("id");
+CREATE UNIQUE INDEX "users_pkey" ON "users" ("id");
+CREATE UNIQUE INDEX "users_username_unique" ON "users" ("username");
+CREATE UNIQUE INDEX "__drizzle_migrations_pkey" ON "drizzle"."__drizzle_migrations" ("id");

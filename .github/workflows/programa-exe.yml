@@ -1,0 +1,49 @@
+# Gera o PROGRAMA do Windows (.exe) — abre numa janela própria, sem .bat,
+# sem janela preta, sem navegador e sem instalar o Node.
+# Antes de entregar, o GitHub LIGA o programa e confere se ele responde.
+# Se algo falhar, fica VERMELHO (nada de "verde enganando").
+name: "Programa .exe para Windows"
+on:
+  workflow_dispatch:
+jobs:
+  exe:
+    runs-on: windows-latest
+    steps:
+      - name: Baixar o código
+        uses: actions/checkout@v5
+      - name: Instalar o Node 22
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - name: Instalar as peças
+        run: npm install --no-audit --no-fund
+      - name: Montar a tela
+        run: npm run build
+      - name: Montar o servidor
+        run: npm run build:servidor
+      - name: Teste 1 - o servidor liga sozinho?
+        shell: pwsh
+        run: |
+          $env:NODE_ENV = "production"; $env:PORT = "5099"; $env:HOST = "127.0.0.1"; $env:DATA_DIR = "$env:RUNNER_TEMP\dados-teste"
+          $p = Start-Process -FilePath node -ArgumentList "dist-server/index.mjs" -PassThru -NoNewWindow -RedirectStandardOutput s.log -RedirectStandardError s.err
+          $ok = $false
+          for ($i = 0; $i -lt 90; $i++) { try { $r = Invoke-WebRequest "http://127.0.0.1:5099/" -UseBasicParsing; if ($r.StatusCode -lt 500) { $ok = $true; break } } catch { if ($_.Exception.Response -and [int]$_.Exception.Response.StatusCode -lt 500) { $ok = $true; break } }; Start-Sleep 1 }
+          Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue
+          Get-Content s.log, s.err -ErrorAction SilentlyContinue
+          if (-not $ok) { throw "O servidor não ligou (veja as linhas acima)" }
+      - name: Teste 2 - liga DENTRO do programa (Electron)?
+        shell: pwsh
+        run: |
+          $env:TESTE_SAIR = "1"; $env:DADOS_EM = "$env:RUNNER_TEMP\casa-teste"
+          npx electron .
+          if ($LASTEXITCODE -ne 0) { Get-Content "$env:RUNNER_TEMP\casa-teste\registro.txt" -ErrorAction SilentlyContinue; throw "O programa não ligou o servidor" }
+          Get-Content "$env:RUNNER_TEMP\casa-teste\registro.txt"
+      - name: Fazer o .exe
+        run: npx electron-builder --win nsis portable --x64 --publish never
+      - name: Entregar para baixar
+        uses: actions/upload-artifact@v4
+        with:
+          name: CodeLens-Windows
+          path: |
+            release/*.exe
+          retention-days: 30
